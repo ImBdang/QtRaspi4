@@ -103,3 +103,144 @@ Nếu quá trình tải chậm hoặc link có lỗi, hãy thử vào trang web 
 
 https://download.qt.io/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz.mirrorlist
 
+Sau khi hoàn thành các bước trên, chúng ta đã có Qt6 trên máy tính host của chúng ta rồi, tiếp theo sẽ là quá trình tạo trình biên dịch chéo giúp Qt tạo ra ứng dụng trên kiến trúc ARM
+
+# Tải toolchain của Raspberry Pi
+NOTE: toolchain bắt buộc nằm trong folder /opt
+```Bash
+sudo mkdir /opt/rpi && cd /opt/rpi
+
+sudo wget www.ulasdikme.com/yedek/rpi-gcc-8.3.0_linux.tar.xz
+
+sudo tar xf rpi-gcc-8.3.0_linux.tar.xz 
+```
+
+# Copy sysroot hệ thống Raspberry Pi
+
+Lưu ý đảm bảo kết nối giữa Raspberry Pi và máy host, ở đây Raspi và máy host cùng chung một network
+
+```Bash
+cd ~/raspi
+
+mkdir rpi_sysroot && cd rpi_sysroot
+
+mkdir sysroot sysroot/usr
+
+rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/usr/include sysroot/usr
+
+rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/lib sysroot
+
+rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/usr/lib sysroot/usr
+
+
+wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py
+
+chmod +x sysroot-relativelinks.py
+
+python3 sysroot-relativelinks.py sysroot
+```
+
+# Biên dịch lại Qt dựa trên sysroot của Raspberry Pi
+
+Tạo folder chứa 
+```Bash
+cd ~/raspi
+mkdir qt-cross && cd qt-cross
+```
+
+Tiếp theo chúng ta sẽ tạo 1 file.cmake, đây sẽ là file cấu hình giúp cmake xác định đường dẫn tới sysroot của Raspi
+
+Ở đây chúng ta sẽ đặt tên nó là toolchain.cmake
+
+```Bash
+cat << 'EOF' > toolchain.cmake
+cmake_minimum_required(VERSION 3.16)
+
+include_guard(GLOBAL)
+
+
+set(CMAKE_SYSTEM_NAME Linux)
+
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+
+set(TARGET_SYSROOT $ENV{HOME}/raspi/rpi_sysroot/sysroot)
+
+
+set(CROSS_COMPILER /opt/rpi/rpi-gcc-8.3.0/bin/arm-linux-gnueabihf)
+
+
+set(CMAKE_SYSROOT ${TARGET_SYSROOT})
+
+
+set(CMAKE_C_COMPILER ${CROSS_COMPILER}-gcc)
+
+set(CMAKE_CXX_COMPILER ${CROSS_COMPILER}-g++)
+
+
+set(CMAKE_LIBRARY_ARCHITECTURE arm-linux-gnueabihf)
+
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+
+set(QT_COMPILER_FLAGS "-march=armv8-a -mfpu=crypto-neon-fp-armv8 -mtune=cortex-a72 -mfloat-abi=hard")
+
+set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe")
+
+set(QT_LINKER_FLAGS "-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed")
+
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+
+set(CMAKE_USE_PTHREADS_INIT 1)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+EOF
+```
+Tiếp tục buld lại Qt bằng CMake, nhưng lần này sẽ dựa trên sysroot và toolchain dành cho kiến trúc ARM
+
+Chúng ta sử dụng source qt mà bước bên trên chúng ta dã tải về
+
+```Bash
+tar xf ../qtbase-everywhere-src-6.3.0.tar.xz
+
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_FEATURE_eglfs_egldevice=ON -DQT_FEATURE_eglfs_gbm=ON \
+-DQT_BUILD_TOOLS_WHEN_CROSSCOMPILING=ON  -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF \
+-DQT_HOST_PATH=$HOME/raspi/qt6Host -DCMAKE_STAGING_PREFIX=$HOME/raspi/qt6rpi \
+-DCMAKE_INSTALL_PREFIX=$HOME/raspi/qt6crosspi -DCMAKE_PREFIX_PATH=$HOME/raspi/rpi_sysroot/sysroot/usr/lib/ \
+-DCMAKE_TOOLCHAIN_FILE=$HOME/raspi/qt-cross/toolchain.cmake $HOME/raspi/qt-cross/qtbase-everywhere-src-6.3.0/
+
+cmake --build . --parallel 4
+
+cmake --install .
+```
+
+Sau khi hoàn tất chúng ta sẽ có 1 folder qt6rpi tại ~/raspi, đây là nơi chứa binaries mà Qt đã được build lại dứa trên sysroot và toolchain của Raspi
+
+Giờ hãy gửi folder đó sang Raspi để nó có thể sử dụng
+
+```Bash
+rsync -avz --rsync-path="sudo rsync" $HOME/raspi/qt6rpi piuser@192.168.1.23:/usr/local
+```
+
+Vậy là về cơ bản Raspberry đã có bộ binaries của Qt dành cho kiến trúc ARM rồi, giờ hãy thử test một vài ứng dụng Qt Console cở bản xem chạy được chưa nhé
