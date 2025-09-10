@@ -14,7 +14,7 @@ Máy host mình sử dụng là: Ubuntu 22.04.5 LTS x86_64
 
 Cập nhật cho Pi
 ```Bash
-$ sudo apt update && sudo apt full-upgrade -y
-$ sudo apt reboot
+sudo apt update && sudo apt full-upgrade -y
+sudo apt reboot
 ```
 
