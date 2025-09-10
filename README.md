@@ -21,13 +21,13 @@ sudo apt reboot
 
 Cài các gói package nền tảng hỗ trợ biên dịch
 ```Bash
-sudo apt-get install -y libboost1.71-all-dev libudev-dev libinput-dev libts-dev \
+sudo apt install -y libboost1.71-all-dev libudev-dev libinput-dev libts-dev \
 libmtdev-dev libjpeg-dev libfontconfig1-dev libssl-dev libdbus-1-dev libglib2.0-dev \
 libxkbcommon-dev libegl1-mesa-dev libgbm-dev libgles2-mesa-dev mesa-common-dev \
 libasound2-dev libpulse-dev gstreamer1.0-omx libgstreamer1.0-dev \
 libgstreamer-plugins-base1.0-dev  gstreamer1.0-alsa libvpx-dev libsrtp0-dev libsnappy-dev \
 libnss3-dev "^libxcb.*" flex bison libxslt-dev ruby gperf libbz2-dev libcups2-dev \
-libatkmm-1.6-dev libxi6 libxcomposite1 libfreetype6-dev libicu-dev libsqlite3-dev libxslt1-dev\
+libatkmm-1.6-dev libxi6 libxcomposite1 libfreetype6-dev libicu-dev libsqlite3-dev libxslt1-dev \
 libavcodec-dev libavformat-dev libswscale-dev \
 libx11-dev freetds-dev libsqlite0-dev libpq-dev libiodbc2-dev firebird-dev \
 libgst-dev libxext-dev libxcb1 libxcb1-dev libx11-xcb1 libx11-xcb-dev \
