@@ -38,3 +38,21 @@ libxcb-glx0-dev libxi-dev libdrm-dev libxcb-xinerama0 libxcb-xinerama0-dev libat
 libxcursor-dev libxcomposite-dev libxdamage-dev libxss-dev libxtst-dev libpci-dev libcap-dev \
 libxrandr-dev libdirectfb-dev libaudio-dev libxkbcommon-x11-dev
 ```
+# Chuẩn bị cho máy tính host (Ubuntu)
+
+Update cho ubuntu
+```Bash
+sudo apt update && sudo apt full-upgrade -y
+```
+
+Cài các package cần thiết 
+```Bash
+sudo apt install make build-essential libclang-dev ninja-build gcc git bison \
+python3 gperf pkg-config libfontconfig1-dev libfreetype6-dev libx11-dev libx11-xcb-dev \
+libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libxcb-glx0-dev \
+libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
+libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev \
+libxcb-util-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev \
+libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
+```
+
