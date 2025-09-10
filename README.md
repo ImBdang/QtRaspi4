@@ -18,6 +18,7 @@ Phiên bản Qt mình sử dụng là Qt 6.3.0
 Cập nhật cho Pi
 ```Bash
 sudo apt update && sudo apt full-upgrade -y
+
 sudo apt reboot
 ```
 
@@ -66,6 +67,7 @@ mkdir raspi && cd raspi
 Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ github về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
 ```Bash
 git clone https://github.com/Kitware/CMake.git
+
 cd CMake && ./bootstrap && make && sudo make install
 ```
 
@@ -81,7 +83,20 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
 ```Bash
 cd ~/raspi
+
 wget https://mirrors.sau.edu.cn/qt/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz
+
+mkdir folderSourceQt6 && cd folderSourceQt6
+
+tar xf ../qtbase-everywhere-src-6.3.0.tar.xz && cd qtbase-everywhere-src-6.3.0
+
+cmake -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+-DINPUT_opengl=es2 -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF \
+-DCMAKE_INSTALL_PREFIX=$HOME/raspi/qt6Host
+
+cmake --build . --parallel 4
+
+cmake --install .
 ```
 
 Nếu quá trình tải chậm hoặc link có lỗi, hãy thử vào trang web chính của để copy link tải từ mirror khác
