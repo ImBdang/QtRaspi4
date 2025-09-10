@@ -8,6 +8,7 @@ Tóm lại, quy trình gồm: copy sysroot từ Raspberry Pi về host, cấu h�
 NOTE: Lưu ý các phiên bản Pi có thể ảnh hưởng tới kết quả
 
 Ở đây bản Pi mình dùng là: 2022-04-04-raspios-bullseye-armhf
+
 Máy host mình sử dụng là: Ubuntu 22.04.5 LTS x86_64 
 
 # Chuẩn bị môi trường và cài các gói yêu cầu cho Pi
