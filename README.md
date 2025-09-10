@@ -58,6 +58,11 @@ libxcb-util-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommo
 libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libssl-dev
 ```
 
+Giờ tạo một folder để chứa những gì tiếp theo chúng ta sẽ làm việc cùng
+```Bash
+mkdir raspi && cd raspi
+```
+
 Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ github về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
 ```Bash
 git clone https://github.com/Kitware/CMake.git
@@ -69,4 +74,17 @@ Phiên bản CMake của mình ở đây là
 cmake version 4.1.20250910-g29633b2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+# Tải và build lại source của Qt
+
+Ở đây chúng ta sẽ tải và build lại bản module qtbase-everywhere, đây là module cốt lõi của Qt
+
+```Bash
+cd ~/raspi
+wget https://mirrors.sau.edu.cn/qt/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz
+```
+
+Nếu quá trình tải chậm hoặc link có lỗi, hãy thử vào trang web chính của để copy link tải từ mirror khác
+
+https://download.qt.io/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz.mirrorlist
 
