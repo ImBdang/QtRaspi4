@@ -56,3 +56,8 @@ libxcb-util-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommo
 libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libssl-dev
 ```
 
+Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ gỉthub về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
+```Bash
+git clone https://github.com/Kitware/CMake.git
+cd CMake && ./bootstrap && make && sudo make install
+```
