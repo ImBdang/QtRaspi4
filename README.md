@@ -11,7 +11,7 @@ NOTE: Lưu ý các phiên bản Pi có thể ảnh hưởng tới kết quả
 
 Máy host mình sử dụng là: Ubuntu 22.04.5 LTS x86_64 
 
-Phiên bản Qt mình biên dịch là Qt 6.3.0
+Phiên bản Qt mình sử dụng là Qt 6.3.0
 
 # Chuẩn bị môi trường và cài các gói yêu cầu cho Pi
 
