@@ -244,3 +244,88 @@ rsync -avz --rsync-path="sudo rsync" $HOME/raspi/qt6rpi piuser@192.168.1.23:/usr
 ```
 
 Vậy là về cơ bản Raspberry đã có bộ binaries của Qt dành cho kiến trúc ARM rồi, giờ hãy thử test một vài ứng dụng Qt Console cở bản xem chạy được chưa nhé
+
+# Kiểm thử trình biên dịch chéo
+
+Giờ chúng ta sẽ tạo một Qt Console app Hello World để test xem liệu Raspi đã có thể chạy được source của Qt chưa nhé
+
+Chúng ta cần tạo 1 file main.cpp và 1 file CMakeList.cmake 
+
+File main.cpp
+```Bash
+cd ~/raspi
+
+mkdir testApp && cd testApp
+
+cat<<EOF > main.cpp 
+#include <QCoreApplication>
+#include <QDebug>
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    qDebug()<<"Hello world";
+    return a.exec();
+}
+EOF
+```
+
+File CMakeList.cmake
+```Bash
+cat << 'EOF' > CMakeLists.txt
+cmake_minimum_required(VERSION 3.5)
+
+project(HelloQt6 LANGUAGES CXX)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Qt6Core)
+
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link, ${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+add_executable(HelloQt6 main.cpp)
+
+target_link_libraries(HelloQt6 Qt6::Core)
+EOF
+```
+
+Hãy dùng Qt của raspi biên dịch nào
+```Bash
+$HOME/raspi/qt6rpi/bin/qt-cmake
+
+cmake --build .
+```
+
+Sau đó chúng ta sẽ có 1 file tên là HelloQt6, đây chính là file thực thi của chương trình. (Tên file được định nghĩa trong CMakeLists.txt)
+
+Giờ hãy gửi nó sang Raspi để thử thực thi file đó nào
+```Bash
+scp HelloQt6 piuser@192.168.1.23:~
+```
+
+# Chuyển sang Raspi để chạy thử ứng dụng
+Bây giờ hãy chuyển sang raspi của bạn, ở đây mình sẽ kết nối SSH với nó
+
+Ở trên pi hãy thêm thư mục thư viện của Qt vào biến môi trường dành cho nó
+```Bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/qt6rpi/lib/
+```
+
+Và giờ hãy chạy thử file HelloQt6 mà chúng ta đã gửi vào thư mục home lúc nãy
+
+```Bash
+cd $HOME
+
+./HelloQt6
+```
+
+Nếu như không có bất kỳ lỗi gì thì xin chúc mừng bạn đã hoàn thành thiết lập môi trường biên dịch chéo dành cho Raspberry Pi 4 rồi
