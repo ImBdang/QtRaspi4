@@ -13,7 +13,7 @@ Máy host mình sử dụng là: Ubuntu 22.04.5 LTS x86_64
 
 Phiên bản Qt mình sử dụng là Qt 6.3.0
 
-Để tránh việc link tải các file có thể bị hỏng hoặc tốc độ chậm cũng như các phiên bản mình dùng về sau bị xóa, mình đã up các file như CMake, qtbase,... lên Google Drive bao gồm các file ISO và img bạn có thể tải từ đây
+Để tránh việc link tải các file có thể bị hỏng hoặc tốc độ chậm cũng như các phiên bản mình dùng về sau có thể bị xóa, mình đã up các file như CMake, qtbase,... lên Google Drive bao gồm các file ISO và img bạn có thể tải từ đây
 
 https://drive.google.com/drive/folders/1J5X6xLGYgdjAFmeyzF2CfMrZihq9K3Lg?usp=sharing
 
