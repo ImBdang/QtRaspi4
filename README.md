@@ -11,6 +11,8 @@ NOTE: Lưu ý các phiên bản Pi có thể ảnh hưởng tới kết quả
 
 Máy host mình sử dụng là: Ubuntu 22.04.5 LTS x86_64 
 
+Phiên bản Qt mình biên dịch là Qt 6.3.0
+
 # Chuẩn bị môi trường và cài các gói yêu cầu cho Pi
 
 Cập nhật cho Pi
@@ -56,8 +58,10 @@ libxcb-util-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommo
 libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libssl-dev
 ```
 
-Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ gỉthub về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
+Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ github về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
 ```Bash
 git clone https://github.com/Kitware/CMake.git
 cd CMake && ./bootstrap && make && sudo make install
 ```
+
+Để tránh tình trạng 
