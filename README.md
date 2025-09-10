@@ -103,7 +103,7 @@ Nếu quá trình tải chậm hoặc link có lỗi, hãy thử vào trang web 
 
 https://download.qt.io/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz.mirrorlist
 
-Sau khi hoàn thành các bước trên, chúng ta đã có Qt6 trên máy tính host của chúng ta rồi, tiếp theo sẽ là quá trình tạo trình biên dịch chéo giúp Qt tạo ra ứng dụng trên kiến trúc ARM
+Sau khi hoàn thành các bước trên, chúng ta đã có Qt6 trên máy tính host của chúng ta rồi, tiếp theo sẽ là tạo trình biên dịch chéo giúp Qt tạo ra ứng dụng trên kiến trúc ARM
 
 # Tải toolchain của Raspberry Pi
 NOTE: toolchain bắt buộc nằm trong folder /opt
