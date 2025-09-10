@@ -64,4 +64,8 @@ git clone https://github.com/Kitware/CMake.git
 cd CMake && ./bootstrap && make && sudo make install
 ```
 
-Để tránh tình trạng 
+Phiên bản CMake của mình ở đây là 
+
+cmake version 4.1.20250910-g29633b2
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
