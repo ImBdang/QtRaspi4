@@ -114,7 +114,7 @@ sudo wget www.ulasdikme.com/yedek/rpi-gcc-8.3.0_linux.tar.xz
 sudo tar xf rpi-gcc-8.3.0_linux.tar.xz 
 ```
 
-# Copy sysroot hệ thống Raspberry Pi
+# Copy sysroot của Raspberry Pi
 
 Lưu ý đảm bảo kết nối giữa Raspberry Pi và máy host, ở đây Raspi và máy host cùng chung một network
 
