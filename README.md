@@ -23,7 +23,6 @@ https://drive.google.com/drive/folders/1J5X6xLGYgdjAFmeyzF2CfMrZihq9K3Lg?usp=sha
 Cập nhật cho Pi
 ```Bash
 sudo apt update && sudo apt full-upgrade -y
-
 sudo apt reboot
 ```
 
@@ -72,7 +71,6 @@ mkdir raspi && cd raspi
 Tiếp theo chúng ta sẽ tải mã nguồn của CMake từ github về để build lại (Ở đây CMake đóng vai trò như trình quản lí biên dịch)
 ```Bash
 git clone https://github.com/Kitware/CMake.git
-
 cd CMake && ./bootstrap && make && sudo make install
 ```
 
@@ -90,9 +88,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 cd ~/raspi
 
 wget https://mirrors.sau.edu.cn/qt/archive/qt/6.3/6.3.0/submodules/qtbase-everywhere-src-6.3.0.tar.xz
-
 mkdir folderSourceQt6 && cd folderSourceQt6
-
 tar xf ../qtbase-everywhere-src-6.3.0.tar.xz && cd qtbase-everywhere-src-6.3.0
 
 cmake -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -114,9 +110,7 @@ Sau khi hoàn thành các bước trên, chúng ta đã có Qt6 trên máy tính
 NOTE: toolchain bắt buộc nằm trong folder /opt
 ```Bash
 sudo mkdir /opt/rpi && cd /opt/rpi
-
 sudo wget www.ulasdikme.com/yedek/rpi-gcc-8.3.0_linux.tar.xz
-
 sudo tar xf rpi-gcc-8.3.0_linux.tar.xz 
 ```
 
@@ -126,22 +120,16 @@ Lưu ý đảm bảo kết nối giữa Raspberry Pi và máy host, ở đây Ra
 
 ```Bash
 cd ~/raspi
-
 mkdir rpi_sysroot && cd rpi_sysroot
-
 mkdir sysroot sysroot/usr
 
 rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/usr/include sysroot/usr
-
 rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/lib sysroot
-
 rsync -avz --rsync-path="sudo rsync" piuser@192.168.1.23:/usr/lib sysroot/usr
 
 
 wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py
-
 chmod +x sysroot-relativelinks.py
-
 python3 sysroot-relativelinks.py sysroot
 ```
 
@@ -317,7 +305,7 @@ Giờ hãy gửi nó sang Raspi để thử thực thi file đó nào
 scp HelloQt6 piuser@192.168.1.23:~
 ```
 
-# Chuyển sang Raspi để chạy thử ứng dụng
+# Chạy thử ứng dụng trên Raspi
 Bây giờ hãy chuyển sang raspi của bạn, ở đây mình sẽ kết nối SSH với nó
 
 Ở trên pi hãy thêm thư mục thư viện của Qt vào biến môi trường dành cho nó
