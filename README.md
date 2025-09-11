@@ -322,3 +322,166 @@ cd $HOME
 ```
 
 Nếu như không có bất kỳ lỗi gì thì xin chúc mừng bạn đã hoàn thành thiết lập môi trường biên dịch chéo dành cho Raspberry Pi 4 rồi
+
+# Test thử một ứng dụng GUI với QML
+
+Chúng ta mới chỉ cài qtbase, chỉ chạy được một số console app cơ bản, giờ hãy thử cài thêm 2 module nữa là qtshadertools và qtdeclarative nhé
+
+```Bash
+cd ~/raspi
+
+wget https://ftp.jaist.ac.jp/pub/qtproject/archive/qt/6.3/6.3.0/submodules/qtdeclarative-everywhere-src-6.3.0.tar.xz
+wget https://ftp.jaist.ac.jp/pub/qtproject/archive/qt/6.3/6.3.0/submodules/qtshadertools-everywhere-src-6.3.0.tar.xz
+```
+
+Sau đó chúng ta sẽ build 2 module này cho host trước
+
+```Bash
+cd folderSourceQt6
+tar xf ../qtshadertools-everywhere-src-6.3.0.tar.xz
+tar xf ../qtdeclarative-everywhere-src-6.3.0.tar.xz
+
+cd ~/raspi/folderSourceQt6/qtshadertools-everywhere-src-6.3.0
+$HOME/raspi/qt6Host/bin/qt-configure-module .
+cmake --build . --parallel 4
+cmake --install .
+
+cd /raspi/folderSourceQt6/qtdeclarative-everywhere-src-6.3.0
+$HOME/raspi/qt6Host/bin/qt-configure-module .
+cmake --build . --parallel 4
+cmake --install .
+```
+
+Giờ host của chúng ta đã có binaries của 2 module trên rồi, tiếp theo đó là build lại dành cho raspi
+
+```Bash
+cd ~/raspi/qt-cross
+tar xf ../qtshadertools-everywhere-src-6.3.0.tar.xz
+tar xf ../qtdeclarative-everywhere-src-6.3.0.tar.xz
+
+cd ~/raspi/qt-cross/qtshadertools-everywhere-src-6.3.0
+$HOME/raspi/qt6rpi/bin/qt-configure-module .
+cmake --build . --parallel 4
+cmake --install .
+
+cd ~/raspi/qt-cross/qtdeclarative-everywhere-src-6.3.0
+$HOME/raspi/qt6rpi/bin/qt-configure-module .
+cmake --build . --parallel 4
+cmake --install .
+```
+
+Giờ hãy gửi lại cho raspi bộ binaries sau khi đã thêm 2 module mới
+
+```Bash
+rsync -avz --rsync-path="sudo rsync" $HOME/raspi/qt6rpi piuser@192.168.1.23:/usr/local
+```
+
+# Kiểm thử GUI app
+
+Hãy tạo một ứng dụng nhỏ thử nhé
+```Bash
+cd $HOME/raspi
+mkdir qtGui
+cd qtGui
+```
+
+File CMakeLists.txt
+```Bash
+cat << 'EOF' > CMakeLists.txt
+cmake_minimum_required(VERSION 3.5)
+
+project(HelloQt6Qml LANGUAGES CXX)
+message("CMAKE_SYSROOT " ${CMAKE_SYSROOT})
+message("CMAKE_LIBRARY_ARCHITECTURE " ${CMAKE_LIBRARY_ARCHITECTURE})
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Qt6 COMPONENTS Core Quick REQUIRED)
+
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link, ${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+add_executable(HelloQt6Qml main.cpp)
+
+target_link_libraries(HelloQt6Qml -lm -ldl Qt6::Core Qt6::Quick)
+EOF
+```
+
+File main.cpp
+```Bash
+cat << 'EOF' > main.cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    const QUrl url(QStringLiteral("main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                     &app, [url](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url == objUrl)
+            QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
+}
+EOF
+```
+
+File main.qml
+```Bash
+cat << 'EOF' > main.qml
+import QtQuick 2.12
+import QtQuick.Window 2.12
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("CROSS COMPILED QT6")
+
+
+	Rectangle {
+	    width: parent.width
+	    height: parent.height
+
+	    Rectangle {
+		id: button
+
+		width: 100
+		height: 30
+		color: "blue"
+		anchors.centerIn: parent
+
+		Text {
+		    id: buttonText
+		    text: qsTr("Button")
+		    color: "white"
+		    anchors.centerIn: parent
+		}
+
+		MouseArea {
+		    anchors.fill: parent
+		    onClicked: {
+		        buttonText.text = qsTr("Clicked");
+		        buttonText.color = "black";
+		    }
+		}
+	    }
+	}
+}
+EOF
+```
+
+Hãy buld thử và gửi nó sang Raspi để chạy
+```Bash
+$HOME/raspi/qt6rpi/qt-cmake
+cmake --build .
+scp HelloQt6Qml main.qml piuser@192.168.1.23:~
+```
+
