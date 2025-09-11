@@ -228,7 +228,7 @@ cmake --build . --parallel 4
 cmake --install .
 ```
 
-Sau khi hoàn tất chúng ta sẽ có 1 folder qt6rpi tại ~/raspi, đây là nơi chứa binaries mà Qt đã được build lại dứa trên sysroot và toolchain của Raspi
+Sau khi hoàn tất chúng ta sẽ có 1 folder qt6rpi tại ~/raspi, đây là nơi chứa binaries mà Qt đã được build lại dựa trên sysroot và toolchain của Raspi
 
 Giờ hãy gửi folder đó sang Raspi để nó có thể sử dụng
 
