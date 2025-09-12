@@ -347,7 +347,7 @@ $HOME/raspi/qt6Host/bin/qt-configure-module .
 cmake --build . --parallel 4
 cmake --install .
 
-cd /raspi/folderSourceQt6/qtdeclarative-everywhere-src-6.3.0
+cd ~/raspi/folderSourceQt6/qtdeclarative-everywhere-src-6.3.0
 $HOME/raspi/qt6Host/bin/qt-configure-module .
 cmake --build . --parallel 4
 cmake --install .
