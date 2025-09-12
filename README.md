@@ -65,6 +65,7 @@ libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libssl-dev
 
 Giờ tạo một folder để chứa những gì tiếp theo chúng ta sẽ làm việc cùng
 ```Bash
+cd ~
 mkdir raspi && cd raspi
 ```
 
