@@ -239,7 +239,7 @@ rsync -avz --rsync-path="sudo rsync" $HOME/raspi/qt6rpi piuser@192.168.1.23:/usr
 
 Vậy là về cơ bản Raspberry đã có bộ binaries của Qt dành cho kiến trúc ARM rồi, giờ hãy thử test một vài ứng dụng Qt Console cở bản xem chạy được chưa nhé
 
-# Kiểm thử trình biên dịch chéo
+# Test thử biên dịch chéo
 
 Giờ chúng ta sẽ tạo một Qt Console app Hello World để test xem liệu Raspi đã có thể chạy được source của Qt chưa nhé
 
