@@ -26,7 +26,7 @@ sudo apt update && sudo apt full-upgrade -y
 sudo apt reboot
 ```
 
-Cài các gói package nền tảng hỗ trợ biên dịch
+Cài các gói package nền tảng
 ```Bash
 sudo apt install -y libboost1.71-all-dev libudev-dev libinput-dev libts-dev \
 libmtdev-dev libjpeg-dev libfontconfig1-dev libssl-dev libdbus-1-dev libglib2.0-dev \
