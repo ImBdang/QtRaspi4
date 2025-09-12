@@ -81,7 +81,7 @@ cmake version 4.1.20250910-g29633b2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
-# Tải và build lại source của Qt
+# Tải và build lại source của Qt cho máy host
 
 Ở đây chúng ta sẽ tải và build lại bản module qtbase-everywhere, đây là module cốt lõi của Qt
 
