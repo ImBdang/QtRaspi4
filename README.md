@@ -481,7 +481,7 @@ EOF
 
 Hãy buld thử và gửi nó sang Raspi để chạy
 ```Bash
-$HOME/raspi/qt6rpi/qt-cmake
+$HOME/raspi/qt6rpi/bin/qt-cmake
 cmake --build .
 scp HelloQt6Qml main.qml piuser@192.168.1.23:~
 ```
